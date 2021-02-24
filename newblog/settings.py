@@ -38,6 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'newblog.categorias',
+    'newblog.comentarios',
+    'newblog.posts',
+    'django_summernote',
 ]
 
 MIDDLEWARE = [
@@ -102,9 +106,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-BR'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
@@ -118,3 +122,18 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
+
+## alter constants of alerts
+from django.contrib.messages import constants
+MESSAGE_TAGS = {
+    constants.ERROR: 'alert-danger',
+    constants.WARNING:'alert-warning',
+    constants.DEBUG:'alert-info',
+    constants.SUCCESS:'alert-success',
+    constants.INFO:'alert-info',
+}
+X_FRAME_OPTIONS = 'SAMEORIGIN'
