@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'newblog.comentarios',
     'newblog.posts',
     'django_summernote',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [

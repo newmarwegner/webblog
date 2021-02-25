@@ -1,14 +1,14 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView
-
-
-def home(request):
-    return render(request, 'index.html')
+from .models import Post
 
 
 class PostIndex(ListView):
-    pass
+    model = Post
+    template_name = 'index.html'
+    paginate_by = 3
+    context_object_name = 'posts'
 
 class PostBusca(PostIndex):
     pass

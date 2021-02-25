@@ -20,7 +20,6 @@ from django.conf.urls.static import static
 from newblog.posts import views
 
 urlpatterns = [
-    path('', views.home),
     path('', views.PostIndex.as_view(), name='index'),
     path('categoria/<str:categoria>', views.PostCategoria.as_view(), name='post_categoria'),
     path('busca/', views.PostBusca.as_view(), name='post_busca'),
