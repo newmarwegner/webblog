@@ -22,7 +22,7 @@
         <div class="col-xl"></div>
         <div class="col-xl-8">
             {% if post.imagem_post %}
-            <img class="rounded mx-auto d-block" src="{{ post.imagem_post.url}}" alt="{{ post.titulo_post }}" text-align="center">
+            <img class="rounded mx-auto d-block" src="{{ post.imagem_post.url}}" alt="{{ post.titulo_post }}">
             {% endif %}
         <br>
             {{ post.conteudo_post | safe}}
