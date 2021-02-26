@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.db.models import Count, Case, When, Q
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render, get_object_or_404
+from django.views.generic.base import View
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 from .models import Post
@@ -56,30 +57,69 @@ class PostCategoria(PostIndex):
         
         return qs
 
-class PostDetalhes(UpdateView):
+
+class PostDetalhes(View):
     template_name = 'post_detalhes.html'
-    model = Post
-    form_class = FormComentario
-    context_object_name = 'post'
     
-    def get_context_data(self, **kwargs):
-        contexto = super().get_context_data(**kwargs)
-        post = self.get_object()
-        comentarios = Comentario.objects.filter(publicado_comentario=True,
-                                                post_comentario=post.id)
-        contexto['comentarios'] = comentarios
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
         
-        return contexto
+        self.pk = self.kwargs.get('pk')
+        post = get_object_or_404(Post,pk=self.pk, publicado_post=True)
+        self.contexto = {
+            'post': post,
+            'comentarios': Comentario.objects.filter(post_comentario=post, publicado_comentario=True),
+            'form': FormComentario(request.POST or None),
+        }
     
-    def form_valid(self, form):
-        post = self.get_object()
-        comentario = Comentario(**form.cleaned_data)
-        comentario.post_comentario = post
+    def get(self, request, *args, **kwargs):
         
-        if self.request.user.is_authenticated:
-            comentario.usuario_comentario = self.request.user
+        return render(request, self.template_name, self.contexto)
+    
+    
+    def post(self, request, *args, **kwargs):
+        form = self.contexto['form']
+        if not form.is_valid():
+            return render(request, self.template_name, self.contexto)
         
+        comentario = form.save(commit=False)
+
+        if request.user.is_authenticated:
+            comentario.usuario_comentario = request.user
+        comentario.post_comentario = self.contexto['post']
         comentario.save()
         messages.success(self.request,'Comentário enviado com sucesso')
         
-        return redirect('post_detalhes', pk=post.id)
+        return redirect('post_detalhes', pk=self.pk)
+
+
+
+
+
+# class PostDetalhes(UpdateView):
+#     template_name = 'post_detalhes.html'
+#     model = Post
+#     form_class = FormComentario
+#     context_object_name = 'post'
+#
+#     def get_context_data(self, **kwargs):
+#         contexto = super().get_context_data(**kwargs)
+#         post = self.get_object()
+#         comentarios = Comentario.objects.filter(publicado_comentario=True,
+#                                                 post_comentario=post.id)
+#         contexto['comentarios'] = comentarios
+#
+#         return contexto
+#
+#     def form_valid(self, form):
+#         post = self.get_object()
+#         comentario = Comentario(**form.cleaned_data)
+#         comentario.post_comentario = post
+#
+#         if self.request.user.is_authenticated:
+#             comentario.usuario_comentario = self.request.user
+#
+#         comentario.save()
+#         messages.success(self.request,'Comentário enviado com sucesso')
+#
+#         return redirect('post_detalhes', pk=post.id)

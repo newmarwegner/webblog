@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'newblog.posts',
     'django_summernote',
     'django.contrib.humanize',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,4 @@ MESSAGE_TAGS = {
     constants.INFO:'alert-info',
 }
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
